@@ -69,8 +69,8 @@
 @property (nonatomic, assign) NSInteger maxRecordDuration;
 
 @property (nonatomic, strong) UIButton *dismissBtn;
-@property (nonatomic, strong) UIButton *cancelBtn;
-@property (nonatomic, strong) UIButton *doneBtn;
+//@property (nonatomic, strong) UIButton *cancelBtn;
+//@property (nonatomic, strong) UIButton *doneBtn;
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *bottomView;
 @property (nonatomic, strong) CAShapeLayer *animateLayer;
@@ -85,7 +85,7 @@
 {
     if (!_animateLayer) {
         _animateLayer = [CAShapeLayer layer];
-        CGFloat width = CGRectGetHeight(self.bottomView.frame)*kBottomViewScale;
+        CGFloat width = CGRectGetHeight(self.bottomView.frame);
         UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, width, width) cornerRadius:width/2];
         
         _animateLayer.strokeColor = self.circleProgressColor.CGColor;
@@ -122,22 +122,24 @@
     if (_layoutOK) return;
     
     _layoutOK = YES;
-    CGFloat height = GetViewHeight(self);
-    self.bottomView.frame = CGRectMake(0, 0, height*kBottomViewScale, height*kBottomViewScale);
+    CGFloat height = 94;
+    self.bottomView.frame = CGRectMake(0, 0, height, height);
     self.bottomView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-    self.bottomView.layer.cornerRadius = height*kBottomViewScale/2;
+    self.bottomView.layer.cornerRadius = height/2;
+    self.bottomView.layer.borderWidth = 2;
+    self.bottomView.layer.borderColor = [UIColor blackColor].CGColor;
 
     self.topView.frame = CGRectMake(0, 0, height*kTopViewScale, height*kTopViewScale);
     self.topView.center = self.bottomView.center;
     self.topView.layer.cornerRadius = height*kTopViewScale/2;
     
-    self.dismissBtn.frame = CGRectMake(60, self.bounds.size.height/2-25/2, 25, 25);
+//    self.dismissBtn.frame = CGRectMake(60, self.bounds.size.height/2-25/2, 25, 25);
 
-    self.cancelBtn.frame = self.bottomView.frame;
-    self.cancelBtn.layer.cornerRadius = height*kBottomViewScale/2;
-    
-    self.doneBtn.frame = self.bottomView.frame;
-    self.doneBtn.layer.cornerRadius = height*kBottomViewScale/2;
+//    self.cancelBtn.frame = self.bottomView.frame;
+//    self.cancelBtn.layer.cornerRadius = height*kBottomViewScale/2;
+//
+//    self.doneBtn.frame = self.bottomView.frame;
+//    self.doneBtn.layer.cornerRadius = height*kBottomViewScale/2;
 }
 
 - (void)setAllowTakePhoto:(BOOL)allowTakePhoto
@@ -154,7 +156,7 @@
     _allowRecordVideo = allowRecordVideo;
     if (allowRecordVideo) {
         UILongPressGestureRecognizer *longG = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
-        longG.minimumPressDuration = 0.3;
+        longG.minimumPressDuration = .3;
         longG.delegate = self;
         [self.bottomView addGestureRecognizer:longG];
     }
@@ -162,9 +164,10 @@
 
 - (void)setupUI
 {
+    self.backgroundColor = [UIColor whiteColor];
     self.bottomView = [[UIView alloc] init];
     self.bottomView.layer.masksToBounds = YES;
-    self.bottomView.backgroundColor = [kRGB(244, 244, 244) colorWithAlphaComponent:.9];
+    self.bottomView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.bottomView];
     
     self.topView = [[UIView alloc] init];
@@ -173,28 +176,28 @@
     self.topView.userInteractionEnabled = NO;
     [self addSubview:self.topView];
     
-    self.dismissBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.dismissBtn.frame = CGRectMake(60, self.bounds.size.height/2-25/2, 25, 25);
-    [self.dismissBtn setImage:GetImageWithName(@"zl_arrow_down") forState:UIControlStateNormal];
-    [self.dismissBtn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.dismissBtn];
+//    self.dismissBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    self.dismissBtn.frame = CGRectMake(60, self.bounds.size.height/2-25/2, 25, 25);
+//    [self.dismissBtn setImage:GetImageWithName(@"zl_arrow_down") forState:UIControlStateNormal];
+//    [self.dismissBtn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
+//    [self addSubview:self.dismissBtn];
     
-    self.cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.cancelBtn.backgroundColor = [kRGB(244, 244, 244) colorWithAlphaComponent:.9];
-    [self.cancelBtn setImage:GetImageWithName(@"zl_retake") forState:UIControlStateNormal];
-    [self.cancelBtn addTarget:self action:@selector(retake) forControlEvents:UIControlEventTouchUpInside];
-    self.cancelBtn.layer.masksToBounds = YES;
-    self.cancelBtn.hidden = YES;
-    [self addSubview:self.cancelBtn];
+//    self.cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    self.cancelBtn.backgroundColor = [kRGB(244, 244, 244) colorWithAlphaComponent:.9];
+//    [self.cancelBtn setImage:GetImageWithName(@"zl_retake") forState:UIControlStateNormal];
+//    [self.cancelBtn addTarget:self action:@selector(retake) forControlEvents:UIControlEventTouchUpInside];
+//    self.cancelBtn.layer.masksToBounds = YES;
+//    self.cancelBtn.hidden = YES;
+//    [self addSubview:self.cancelBtn];
     
-    self.doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.doneBtn.frame = self.bottomView.frame;
-    self.doneBtn.backgroundColor = [UIColor whiteColor];
-    [self.doneBtn setImage:GetImageWithName(@"zl_takeok") forState:UIControlStateNormal];
-    [self.doneBtn addTarget:self action:@selector(doneClick) forControlEvents:UIControlEventTouchUpInside];
-    self.doneBtn.layer.masksToBounds = YES;
-    self.doneBtn.hidden = YES;
-    [self addSubview:self.doneBtn];
+//    self.doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    self.doneBtn.frame = self.bottomView.frame;
+//    self.doneBtn.backgroundColor = [UIColor whiteColor];
+//    [self.doneBtn setImage:GetImageWithName(@"zl_takeok") forState:UIControlStateNormal];
+//    [self.doneBtn addTarget:self action:@selector(doneClick) forControlEvents:UIControlEventTouchUpInside];
+//    self.doneBtn.layer.masksToBounds = YES;
+//    self.doneBtn.hidden = YES;
+//    [self addSubview:self.doneBtn];
 }
 
 #pragma mark - GestureRecognizer
@@ -285,19 +288,19 @@
 
 - (void)showCancelDoneBtn
 {
-    self.cancelBtn.hidden = NO;
-    self.doneBtn.hidden = NO;
-    
-    CGRect cancelRect = self.cancelBtn.frame;
-    cancelRect.origin.x = 40;
-    
-    CGRect doneRect = self.doneBtn.frame;
-    doneRect.origin.x = GetViewWidth(self)-doneRect.size.width-40;
-    
-    [UIView animateWithDuration:kAnimateDuration animations:^{
-        self.cancelBtn.frame = cancelRect;
-        self.doneBtn.frame = doneRect;
-    }];
+//    self.cancelBtn.hidden = NO;
+//    self.doneBtn.hidden = NO;
+//
+//    CGRect cancelRect = self.cancelBtn.frame;
+//    cancelRect.origin.x = 40;
+//
+//    CGRect doneRect = self.doneBtn.frame;
+//    doneRect.origin.x = GetViewWidth(self)-doneRect.size.width-40;
+//
+//    [UIView animateWithDuration:kAnimateDuration animations:^{
+//        self.cancelBtn.frame = cancelRect;
+//        self.doneBtn.frame = doneRect;
+//    }];
 }
 
 - (void)resetUI
@@ -309,11 +312,11 @@
     self.dismissBtn.hidden = NO;
     self.bottomView.hidden = NO;
     self.topView.hidden = NO;
-    self.cancelBtn.hidden = YES;
-    self.doneBtn.hidden = YES;
-    
-    self.cancelBtn.frame = self.bottomView.frame;
-    self.doneBtn.frame = self.bottomView.frame;
+//    self.cancelBtn.hidden = YES;
+//    self.doneBtn.hidden = YES;
+//
+//    self.cancelBtn.frame = self.bottomView.frame;
+//    self.doneBtn.frame = self.bottomView.frame;
 }
 
 #pragma mark - btn actions
@@ -339,7 +342,7 @@
 
 //--------------------------------------------------------//
 //--------------------------------------------------------//
-@interface ZLCustomCamera () <CameraToolViewDelegate, AVCaptureFileOutputRecordingDelegate, UIGestureRecognizerDelegate>
+@interface ZLCustomCamera () <CameraToolViewDelegate, AVCaptureFileOutputRecordingDelegate>
 {
     //拖拽手势开始的录制
     BOOL _dragStart;
@@ -391,21 +394,6 @@
 //    NSLog(@"---- %s", __FUNCTION__);
 }
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        self.modalPresentationStyle = UIModalPresentationFullScreen;
-        self.allowTakePhoto = YES;
-        self.allowRecordVideo = YES;
-        self.maxRecordDuration = 15;
-        self.sessionPreset = ZLCaptureSessionPreset1280x720;
-        self.videoType = ZLExportVideoTypeMp4;
-        self.circleProgressColor = kRGB(80, 169, 56);
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -436,34 +424,11 @@
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    [UIApplication sharedApplication].statusBarHidden = YES;
-    [self.session startRunning];
-    [self setFocusCursorWithPoint:self.view.center];
-    if (!self.allowTakePhoto && !self.allowRecordVideo) {
-        ShowAlert(@"allowTakePhoto与allowRecordVideo不能同时为NO", self);
-    }
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
-    [UIApplication sharedApplication].statusBarHidden = NO;
     [self.motionManager stopDeviceMotionUpdates];
     self.motionManager = nil;
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    
-    if (self.session) {
-        [self.session stopRunning];
-    }
 }
 
 #pragma mark - 监控设备方向
@@ -508,6 +473,26 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [UIApplication sharedApplication].statusBarHidden = YES;
+    [self.session startRunning];
+    [self setFocusCursorWithPoint:self.view.center];
+    if (!self.allowTakePhoto && !self.allowRecordVideo) {
+        ShowAlert(@"allowTakePhoto与allowRecordVideo不能同时为NO", self);
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [UIApplication sharedApplication].statusBarHidden = NO;
+    if (self.session) {
+        [self.session stopRunning];
+    }
+}
+
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskPortrait;
@@ -526,7 +511,7 @@
     if (_layoutOK) return;
     _layoutOK = YES;
     
-    self.toolView.frame = CGRectMake(0, kViewHeight-150-ZL_SafeAreaBottom(), kViewWidth, 100);
+    self.toolView.frame = CGRectMake(0, kViewHeight-180-44-ZL_SafeAreaBottom, kViewWidth, 180+ZL_SafeAreaBottom);
     self.previewLayer.frame = self.view.layer.bounds;
     self.toggleCameraBtn.frame = CGRectMake(kViewWidth-50, 20, 30, 30);
 }
@@ -546,7 +531,7 @@
     self.focusCursorImageView = [[UIImageView alloc] initWithImage:GetImageWithName(@"zl_focus")];
     self.focusCursorImageView.contentMode = UIViewContentModeScaleAspectFit;
     self.focusCursorImageView.clipsToBounds = YES;
-    self.focusCursorImageView.frame = CGRectMake(0, 0, 70, 70);
+    self.focusCursorImageView.frame = CGRectMake(0, 0, 80, 80);
     self.focusCursorImageView.alpha = 0;
     [self.view addSubview:self.focusCursorImageView];
     
@@ -555,13 +540,8 @@
     [self.toggleCameraBtn addTarget:self action:@selector(btnToggleCameraAction) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.toggleCameraBtn];
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(adjustFocusPoint:)];
-    tap.delegate = self;
-    [self.view addGestureRecognizer:tap];
-    
     if (self.allowRecordVideo) {
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(adjustCameraFocus:)];
-        pan.maximumNumberOfTouches = 1;
         [self.view addGestureRecognizer:pan];
     }
 }
@@ -597,8 +577,6 @@
     }
     
     self.movieFileOutPut = [[AVCaptureMovieFileOutput alloc] init];
-    // 解决视频录制超过10s没有声音的bug
-    self.movieFileOutPut.movieFragmentInterval = kCMTimeInvalid;
     
     //将视频及音频输入流添加到session
     if ([self.session canAddInput:self.videoInput]) {
@@ -618,7 +596,7 @@
     self.previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
     [self.view.layer setMasksToBounds:YES];
     
-    [self.previewLayer setVideoGravity:AVLayerVideoGravityResizeAspect];
+    [self.previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [self.view.layer insertSublayer:self.previewLayer atIndex:0];
 }
 
@@ -638,29 +616,19 @@
             return AVCaptureSessionPreset1920x1080;
             
         case ZLCaptureSessionPreset3840x2160:
-        {
-            if (@available(iOS 9.0, *)) {
-                return AVCaptureSessionPreset3840x2160;
-            } else {
-                return AVCaptureSessionPreset1920x1080;
-            }
-        }
-        default:
-            return AVCaptureSessionPreset1920x1080;
+            return AVCaptureSessionPreset3840x2160;
     }
 }
 
-#pragma mark - 设置聚焦点
-- (void)adjustFocusPoint:(UITapGestureRecognizer *)tap
+#pragma mark - 点击屏幕设置聚焦点
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     if (!self.session.isRunning) return;
     
-    CGPoint point = [tap locationInView:self.view];
-    
-    if (point.y > CGRectGetMinY(self.toolView.frame)) {
+    CGPoint point = [touches.anyObject locationInView:self.view];
+    if (point.y > [UIScreen mainScreen].bounds.size.height-150-ZL_SafeAreaBottom) {
         return;
     }
-    
     [self setFocusCursorWithPoint:point];
 }
 
@@ -669,7 +637,7 @@
 {
     self.focusCursorImageView.center = point;
     self.focusCursorImageView.alpha = 1;
-    self.focusCursorImageView.transform = CGAffineTransformMakeScale(1.2, 1.2);
+    self.focusCursorImageView.transform = CGAffineTransformMakeScale(1.1, 1.1);
     [UIView animateWithDuration:0.5 animations:^{
         self.focusCursorImageView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
@@ -712,6 +680,7 @@
 #pragma mark - 手势调整焦距
 - (void)adjustCameraFocus:(UIPanGestureRecognizer *)pan
 {
+    //TODO: 录像中，点击屏幕聚焦，暂时没有思路，1.若添加tap手势 无法解决pan和tap之间的冲突； 2.使用系统touchesBegan方法，触发pan手势后 touchesBegan 无效
     CGRect caremaViewRect = [self.toolView convertRect:self.toolView.bottomView.frame toView:self.view];
     CGPoint point = [pan locationInView:self.view];
     
@@ -745,12 +714,6 @@
     if (error) return;
     captureDevice.videoZoomFactor = zoomFactor;
     [captureDevice unlockForConfiguration];
-}
-
-#pragma mark - gesture delegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    return YES;
 }
 
 #pragma mark - 切换前后相机
@@ -833,6 +796,9 @@
         weakSelf.takedImageView.hidden = NO;
         weakSelf.takedImageView.image = image;
         [weakSelf.session stopRunning];
+        [weakSelf onOkClick];
+        [weakSelf dismissViewControllerAnimated:YES completion:nil];
+
     }];
 }
 
@@ -854,6 +820,8 @@
     [self.movieFileOutPut stopRecording];
     [self.session stopRunning];
     [self setVideoZoomFactor:1];
+    
+    [self onOkClick];
 }
 
 //重新拍照或录制
@@ -861,15 +829,7 @@
 {
     [self.session startRunning];
     [self setFocusCursorWithPoint:self.view.center];
-    if (self.takedImage != nil) {
-        [UIView animateWithDuration:0.25 animations:^{
-            self.takedImageView.alpha = 0;
-        } completion:^(BOOL finished) {
-            self.takedImageView.hidden = YES;
-            self.takedImageView.alpha = 1;
-        }];
-    }
-    
+    self.takedImageView.hidden = YES;
     [self deleteVideo];
 }
 
@@ -898,7 +858,6 @@
         self.playerView = [[ZLPlayer alloc] initWithFrame:self.view.bounds];
         [self.view insertSubview:self.playerView belowSubview:self.toolView];
     }
-    self.playerView.hidden = NO;
     self.playerView.videoUrl = self.videoUrl;
     [self.playerView play];
 }
@@ -907,12 +866,7 @@
 {
     if (self.videoUrl) {
         [self.playerView reset];
-        [UIView animateWithDuration:0.25 animations:^{
-            self.playerView.alpha = 0;
-        } completion:^(BOOL finished) {
-            self.playerView.hidden = YES;
-            self.playerView.alpha = 1;
-        }];
+        self.playerView.alpha = 0;
         [[NSFileManager defaultManager] removeItemAtURL:self.videoUrl error:nil];
     }
 }
@@ -925,10 +879,10 @@
 
 - (void)captureOutput:(AVCaptureFileOutput *)output didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray<AVCaptureConnection *> *)connections error:(NSError *)error
 {
-    if (CMTimeGetSeconds(output.recordedDuration) < 0.3) {
+    if (CMTimeGetSeconds(output.recordedDuration) < 1) {
         if (self.allowTakePhoto) {
-            //视频长度小于0.3s 允许拍照则拍照，不允许拍照，则保存小于0.3s的视频
-            ZLLoggerDebug(@"视频长度小于0.3s，按拍照处理");
+            //视频长度小于1s 允许拍照则拍照，不允许拍照，则保存小于1s的视频
+            ZLLoggerDebug(@"视频长度小于1s，按拍照处理");
             [self onTakePicture];
             return;
         }
@@ -936,7 +890,7 @@
     
     self.videoUrl = outputFileURL;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self playVideo];
+//        [self playVideo];
     });
 }
 
