@@ -627,7 +627,7 @@
     if (!self.session.isRunning) return;
     
     CGPoint point = [touches.anyObject locationInView:self.view];
-    if (point.y > [UIScreen mainScreen].bounds.size.height-150-ZL_SafeAreaBottom) {
+    if (point.y > [UIScreen mainScreen].bounds.size.height-150-ZL_SafeAreaBottom()) {
         return;
     }
     [self setFocusCursorWithPoint:point];
