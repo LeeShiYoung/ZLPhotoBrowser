@@ -510,8 +510,9 @@
     [super viewDidLayoutSubviews];
     if (_layoutOK) return;
     _layoutOK = YES;
-    
-    self.toolView.frame = CGRectMake(0, kViewHeight-180-44-ZL_SafeAreaBottom, kViewWidth, 180+ZL_SafeAreaBottom);
+    CGFloat h = 180 - 44;
+    CGFloat hh = 180;
+    self.toolView.frame = CGRectMake(0, kViewHeight-h-ZL_SafeAreaBottom(), kViewWidth, hh+ZL_SafeAreaBottom());
     self.previewLayer.frame = self.view.layer.bounds;
     self.toggleCameraBtn.frame = CGRectMake(kViewWidth-50, 20, 30, 30);
 }
